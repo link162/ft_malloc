@@ -5,7 +5,7 @@ SRC			= main.c yurii.c
 SRC_DIR		= src/
 OBJ_DIR		= obj/
 OBJ			= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
-INC_DIR		= includes/
+INC_DIR		= includes/ 
 LIBFT_DIR	= libftprintf/
 LIBFT		= $(LIBFT_DIR)libftprintf.a
 
@@ -13,7 +13,7 @@ LIBFT		= $(LIBFT_DIR)libftprintf.a
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJ)
-	@$(COMP) -o $(NAME) $(OBJ)
+	@$(COMP) -o $(NAME) $(LIBFT) $(OBJ)
 	@printf "\033[1;32mmalloc created \033[0m\n"
 
 $(LIBFT):
