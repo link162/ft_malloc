@@ -14,8 +14,10 @@
 
 void		ft_put_char(int c)
 {
+	int i;
 	g_count++;
-	write(1, &c, 1);
+	i = write(1, &c, 1);
+	i++;
 }
 
 static int	check_flags(char c)
