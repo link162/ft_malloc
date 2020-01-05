@@ -1,4 +1,5 @@
 #include "malloc.h"
+#include "string.h"
 
 void say_hello()
 {

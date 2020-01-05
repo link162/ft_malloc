@@ -16,6 +16,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-void yurii(void);
+//void *malloc(size_t size);
 
 #endif
