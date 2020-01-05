@@ -12,7 +12,7 @@
 
 #ifndef MALLOC_H
 #define MALLOC_H
-#include "../libftprintf/libftprintf.h"
+#include "libftprintf.h"
 
 #include <stdio.h>
 #include <stdlib.h>
