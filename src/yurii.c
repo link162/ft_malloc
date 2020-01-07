@@ -1,6 +1,7 @@
 #include "malloc.h"
 
-void yurii(void)
+void *malloc(size_t n)
 {
-	printf("hello, Yurii!\n");
+	printf("Called malloc, size %zu\n", n);
+	return NULL;
 }

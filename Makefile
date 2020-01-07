@@ -1,4 +1,4 @@
-NAME		= hello
+NAME		= libmalloc.so
 COMP		= gcc
 FLAGS		= -O3 -Wall -Wextra -Werror
 SRC			= main.c yurii.c
@@ -13,8 +13,11 @@ LIBFT		= $(LIBFT_DIR)libftprintf.a
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJ)
-	@$(COMP) -o $(NAME) $(LIBFT) $(OBJ)
+	@$(COMP) -o $(NAME) -shared $(LIBFT) $(OBJ)
 	@printf "\033[1;32mmalloc created \033[0m\n"
+	@gcc -c test.c
+	@gcc -o hello -L. -lmalloc test.o
+
 
 $(LIBFT):
 	@make -C $(LIBFT_DIR)
@@ -25,7 +28,7 @@ $(OBJ_DIR):
 	@mkdir $(OBJ_DIR)
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
-	@$(COMP) -c $< -o $@ $(FLAGS) -I $(INC_DIR)
+	@$(COMP) -c $< -fPIC -o $@ $(FLAGS) -I $(INC_DIR)
 
 clean:
 	@rm -rf $(OBJ)*
@@ -33,7 +36,7 @@ clean:
 	@printf "\033[1;33mobject deleted \033[0m\n"
 
 fclean: clean
-	@rm -rf $(NAME)
+	@rm -rf $(NAME) test.o hello
 	@make fclean -C $(LIBFT_DIR)
 	@rm -rf $(OBJ_DIR)
 	@printf "\033[1;31mmalloc deleted \033[0m\n"
