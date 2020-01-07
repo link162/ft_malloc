@@ -27,7 +27,7 @@ $(OBJ_DIR):
 	@mkdir $(OBJ_DIR)
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
-	@$(COMP) -c $< -fPIC -o $@ $(FLAGS) -I $(INC_DIR)
+	@$(COMP) -c $< -fPIC -o $@ $(FLAGS) -I $(INC_DIR) -I $(LIBFT_DIR)
 
 clean:
 	@rm -rf $(OBJ)*

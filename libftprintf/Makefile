@@ -30,7 +30,7 @@ $(NAME): $(OBJ)
 	@ranlib $(NAME)
 	@printf "\033[1;32mlibftprintf created \033[0m\n"
 
-$(OBJ): $(OBJ_D)
+$(OBJ): | $(OBJ_D)
 
 $(OBJ_D):
 	@mkdir -p $(OBJ_D)$(SRC_D)

@@ -1,6 +1,4 @@
 #include "malloc.h"
-void *malloc(size_t n);
-void say_hello(void);
 
 int main(void)
 {

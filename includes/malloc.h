@@ -12,10 +12,11 @@
 
 #ifndef MALLOC_H
 #define MALLOC_H
-#include "libftprintf.h"
+#include "../libftprintf/libftprintf.h"
 
 #include <stdio.h>
 #include <stdlib.h>
-//void *malloc(size_t size);
+void *malloc(size_t size);
+void say_hello(void);
 
 #endif
