@@ -15,9 +15,8 @@ all: $(NAME)
 $(NAME): $(LIBFT) $(OBJ)
 	@$(COMP) -o $(NAME) -shared $(LIBFT) $(OBJ)
 	@printf "\033[1;32mmalloc created \033[0m\n"
-	@gcc -c test.c
+	@gcc -c test.c -I $(INC_DIR)
 	@gcc -o hello -L. -lmalloc test.o
-
 
 $(LIBFT):
 	@make -C $(LIBFT_DIR)
@@ -42,5 +41,9 @@ fclean: clean
 	@printf "\033[1;31mmalloc deleted \033[0m\n"
 
 re: fclean all
+
+test:
+	@gcc -c mal.c -I $(INC_DIR)
+	@gcc -o mal -L. -lmalloc mal.o
 
 .PHONY: all clean fclean re
