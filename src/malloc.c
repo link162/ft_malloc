@@ -1,7 +1,6 @@
-#include "malloc.h"
+#include "ft_malloc_internal.h"
 
-void *malloc(size_t size)
+void say_hello(void)
 {
-	ft_printf("called malloc, asked size %d\n", size);
-	return NULL;
+	ft_printf("hello, Yurii\n");
 }

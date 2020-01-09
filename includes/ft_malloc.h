@@ -10,13 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MALLOC_H
-#define MALLOC_H
-#include "../libftprintf/libftprintf.h"
+#ifndef FT_MALLOC
+#define FT_MALLOC
 
-#include <stdio.h>
-#include <stdlib.h>
-void *malloc(size_t size);
 void say_hello(void);
 
 #endif

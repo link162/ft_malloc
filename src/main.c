@@ -1,7 +1,6 @@
-#include "malloc.h"
-#include "string.h"
+#include "ft_malloc_internal.h"
 
-void say_hello()
+int main(void)
 {
-	ft_printf("hello, Yurii\n");
+	say_hello();
 }
