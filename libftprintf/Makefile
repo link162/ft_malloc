@@ -18,7 +18,7 @@ OBJ_D		=	obj/
 OBJ			=	$(addprefix $(OBJ_D), $(SRC:.c=.o))
 
 INCLUDE		=	-I includes/
-CFLAGS		=	-O3 -Wall -Wextra -Werror -fPIC
+CFLAGS		=	-O3 -Wall -Wextra -Werror
 C			=	gcc
 
 all: $(NAME)

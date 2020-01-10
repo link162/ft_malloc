@@ -1,5 +1,4 @@
 obj/
-hello
 *.o
 *.a
 *.so

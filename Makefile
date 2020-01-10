@@ -1,4 +1,8 @@
-NAME		= libftmalloc.so
+ifeq ($(HOSTTYPE),)
+HOSTTYPE := $(shell uname -m)_$(shell uname -s)
+endif
+HOSTTYPE	:= $(HOSTTYPE)
+NAME		= libft_malloc_$(HOSTTYPE).so
 EXE			= exec
 TST			= test
 COMP		= gcc
@@ -19,7 +23,7 @@ file: $(EXE)
 TST2: $(TST)
 
 $(TST) : $(NAME)
-	@$(COMP) -o $(TST) test.c -L. -lftmalloc -I $(INC_DIR)
+	@$(COMP) -o $(TST) test.c -L. -lft_malloc_$(HOSTTYPE) -I $(INC_DIR)
 	@printf "\033[1;32m$(TST) created \033[0m\n"
 
 $(EXE) : $(LIBFT) $(OBJ) src/main.c
