@@ -6,13 +6,15 @@
 /*   By: ybuhai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/05 12:29:52 by ybuhai            #+#    #+#             */
-/*   Updated: 2020/01/05 22:03:28 by ybuhai           ###   ########.fr       */
+/*   Updated: 2020/01/12 02:46:48 by ybuhai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_MALLOC
 #define FT_MALLOC
+# include <sys/types.h>
+#include <stdlib.h>
 
-void say_hello(void);
+void *malloc(size_t size);
 
 #endif

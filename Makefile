@@ -1,28 +1,31 @@
 ifeq ($(HOSTTYPE),)
 HOSTTYPE := $(shell uname -m)_$(shell uname -s)
 endif
-HOSTTYPE	:= $(HOSTTYPE)
 NAME		= libft_malloc_$(HOSTTYPE).so
 EXE			= exec
 TST			= test
 COMP		= gcc
-FLAGS		= -O3 -Wall -Wextra -Werror
-SRC			= malloc.c
+FLAGS		= 
+SRC			= malloc.c free.c realloc.c
 SRC_DIR		= src/
 OBJ_DIR		= obj/
 OBJ			= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 INC_DIR		= includes/ 
 LIBFT_DIR	= libftprintf/
 LIBFT		= $(LIBFT_DIR)libftprintf.a
+LINK		= libft_malloc.so
 
 
-all: $(NAME)
+all: $(NAME) $(LINK)
+
+$(LINK):
+	@ln -s $(NAME) $(LINK)
 
 file: $(EXE)
 
 TST2: $(TST)
 
-$(TST) : $(NAME)
+$(TST) : $(NAME) test.c
 	@$(COMP) -o $(TST) test.c -L. -lft_malloc_$(HOSTTYPE) -I $(INC_DIR)
 	@printf "\033[1;32m$(TST) created \033[0m\n"
 
@@ -32,7 +35,6 @@ $(EXE) : $(LIBFT) $(OBJ) src/main.c
 	@printf "\033[1;32m$(EXE) created \033[0m\n"
 
 $(NAME): $(LIBFT) $(OBJ)
-	
 	@$(COMP) -o $(NAME) $(OBJ) -shared $(LIBFT)
 	@printf "\033[1;32m$(NAME) created \033[0m\n"
 
@@ -48,7 +50,7 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@$(COMP) -c $< -fPIC -o $@ $(FLAGS) -I $(INC_DIR) -I $(LIBFT_DIR)
 
 clean:
-	@rm -rf $(OBJ)* $(EXE) *.o a.out $(TST)
+	@rm -rf $(OBJ)* $(EXE) *.o a.out $(TST) $(LINK)
 	@make clean -C $(LIBFT_DIR)
 	@printf "\033[1;33mobject deleted \033[0m\n"
 
