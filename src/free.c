@@ -1,5 +1,23 @@
 #include "ft_malloc_internal.h"
 
+void	check_on_null(int i)
+{
+	t_zone *zone;
+	zone = g_mem.tiny;
+	ft_printf("start checking %i\n", i);
+	while(zone)
+		zone = zone->next;
+	ft_printf("tiny ok %i\n", i);
+	zone = g_mem.small;
+	while(zone)
+		zone = zone->next;
+	ft_printf("small ok %i\n", i);
+	zone = g_mem.big;
+	while(zone)
+		zone = zone->next;
+	ft_printf("big ok %i\n", i);
+}
+
 int		 find_ptr_in_list(t_zone *zone, void *ptr)
 {
 	t_zone *tmp;
@@ -9,9 +27,8 @@ int		 find_ptr_in_list(t_zone *zone, void *ptr)
 	{
 		if (zone + 1 == ptr)
 		{
-			ft_printf("FREE MEMORY!!!\n");
 			zone->used = 0;
-			if (zone->next && !zone->next->used)
+		/*	if (zone->next && !zone->next->used)
 			{
 				zone->size += zone->next->size + sizeof(t_zone);
 				zone->next = zone->next->next;
@@ -20,7 +37,7 @@ int		 find_ptr_in_list(t_zone *zone, void *ptr)
 			{
 				tmp->size += zone->size + sizeof(t_zone);
 				tmp->next = zone->next;
-			}
+			}*/
 			return 1;
 		}
 		zone = zone->next;
@@ -58,6 +75,7 @@ void	free_ptr_in_big(t_zone **zone, void *ptr)
 
 void	free(void *ptr)
 {
+	ft_printf("free(%p);\n", ptr);
 	if (!ptr)
 		return ;
 	else if (find_ptr_in_list(g_mem.tiny, ptr))

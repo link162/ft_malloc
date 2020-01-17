@@ -2,3 +2,5 @@ obj/
 *.o
 *.a
 *.so
+file
+test
