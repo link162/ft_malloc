@@ -4,7 +4,7 @@ t_mem g_mem = {0};
 
 void	*alloc_big_zone(size_t size)
 {
-	//ft_printf("Allocate big mem size %llu", size);
+	ft_printf("here\n");
 	int page_size;
 	t_zone *new;
 
@@ -12,11 +12,13 @@ void	*alloc_big_zone(size_t size)
 	new = mmap(NULL, (size / page_size + 1) * page_size,
 			PROT_READ | PROT_WRITE,
 			MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
-	//ft_printf(", but real alloc is %i bytes\n", (size / page_size + 1) * page_size);
-	if (!new)
+	if (new == MAP_FAILED)
 		return NULL;
+	ft_printf("end\n");
 	new->next = g_mem.big;
+	ft_printf("end1\n");
 	new->size = (size / page_size + 1) * page_size - sizeof(t_zone);
+	ft_printf("end2\n");
 	new->used = 1;
 	g_mem.big = new;
 	return ((void *)((void *)new) + sizeof(t_zone));
@@ -41,7 +43,7 @@ int		mem_init()
 	return (0);
 }
 
-void *find_memory(size_t size, t_zone *zone)
+void *find_memory(size_t size, t_zone *zone, int tiny)
 {
 	t_zone *last;
 
@@ -61,10 +63,11 @@ void *find_memory(size_t size, t_zone *zone)
 			}
 			return ((void *)zone + sizeof(t_zone));
 		}
+		
 		last = zone;
 		zone = zone->next;
 	}
-	last->next = (t_zone *)alloc_big_zone((TINY_SIZE + sizeof(t_zone)) * NUM_PRE_ALLOC);
+	last->next = (t_zone *)alloc_big_zone((SMALL_SIZE + sizeof(t_zone)) * NUM_PRE_ALLOC + sizeof(t_zone));
 	if (!last->next)
 		return (NULL);
 	last = last->next;
@@ -80,7 +83,7 @@ void *find_memory(size_t size, t_zone *zone)
 
 void *malloc(size_t size)
 {
-	ft_printf("malloc(%lli);\n", size);
+	ft_printf("malloc(%lli);\n");
 	if (size < 0)
 		return (NULL);
 	if (!size)
@@ -89,9 +92,9 @@ void *malloc(size_t size)
 		if (mem_init())
 			return (NULL);
 	if (TINY_SIZE >= size)
-		return (find_memory(size, g_mem.tiny));
+		return (find_memory(size, g_mem.tiny, 1));
 	else if(SMALL_SIZE >= size)
-		return (find_memory(size, g_mem.small));
+		return (find_memory(size, g_mem.small, 0));
 	else
 		return (alloc_big_zone(size + sizeof(t_zone)));
 	return (NULL);

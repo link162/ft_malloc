@@ -16,19 +16,9 @@ t_zone	**find_zone(void *ptr, t_zone **zone)
 	return (NULL);
 }
 
-void print_mem()
-{
-	t_zone *big = g_mem.big;
-	while(big)
-	{
-		ft_printf("%p zone size %lli, used %i, next is %p\n", big, big->size, big->used, big->next);
-		big = big->next;
-	}
-}
-
 void	*realloc(void *ptr, size_t size)
 {
-	ft_printf("realloc(%p, %lli);\n", ptr, size);
+	ft_printf("realloc(%p, %lli);\n",ptr, size);
 	t_zone **zone;
 	t_zone *tmp;
 
