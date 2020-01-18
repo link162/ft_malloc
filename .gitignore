@@ -4,3 +4,6 @@ obj/
 *.so
 file
 test
+*.swp
+.swo
+.swa

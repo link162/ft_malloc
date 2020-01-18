@@ -6,7 +6,7 @@
 /*   By: ybuhai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/05 12:29:52 by ybuhai            #+#    #+#             */
-/*   Updated: 2020/01/17 21:12:10 by ybuhai           ###   ########.fr       */
+/*   Updated: 2020/01/18 20:56:31 by ybuhai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,10 @@ typedef struct		s_mem
 }					t_mem;
 
 extern t_mem		g_mem;
+extern pthread_mutex_t	mutex;
 
 void				*malloc(size_t size);
 void				free(void *ptr);
 void				*realloc(void *ptr, size_t size);
-void				print_mem();
-void				check_on_null(int i);
-
+void				count_tiny();
 #endif
