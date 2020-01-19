@@ -6,7 +6,7 @@
 /*   By: ybuhai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/19 02:59:51 by ybuhai            #+#    #+#             */
-/*   Updated: 2020/01/19 04:35:01 by ybuhai           ###   ########.fr       */
+/*   Updated: 2020/01/19 13:49:25 by ybuhai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ t_zone	**find_zone(void *ptr, t_zone **zone)
 	return (NULL);
 }
 
-void	*find_memory_for_realloc(void *ptr, size_t size, t_zone **zone)
+void	*concatinate_mem(void *ptr, size_t size, t_zone **zone, t_zone *obj)
 {
 	void *tmp;
 
@@ -97,7 +97,7 @@ void	*find_memory_for_realloc(void *ptr, size_t size, t_zone **zone)
 		pthread_mutex_unlock(&g_mutex);
 		return (NULL);
 	}
-	ft_memcpy(tmp, ptr, (*zone)->size);
+	ft_memcpy(tmp, ptr, obj->size);
 	free(ptr);
 	pthread_mutex_unlock(&g_mutex);
 	return (tmp);
@@ -118,8 +118,7 @@ void	*realloc(void *ptr, size_t size)
 		pthread_mutex_unlock(&g_mutex);
 		return (malloc(size));
 	}
-	zone = find_zone(ptr, &g_mem.tiny);
-	if (!zone)
+	if (NULL == (zone = find_zone(ptr, &g_mem.tiny)))
 		zone = find_zone(ptr, &g_mem.small);
 	if (!zone)
 		zone = find_zone(ptr, &g_mem.big);
@@ -128,5 +127,5 @@ void	*realloc(void *ptr, size_t size)
 		pthread_mutex_unlock(&g_mutex);
 		return (malloc(size));
 	}
-	return (find_memory_for_realloc(ptr, size, zone));
+	return (concatinate_mem(ptr, size, zone, *zone));
 }

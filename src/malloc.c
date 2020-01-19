@@ -6,7 +6,7 @@
 /*   By: ybuhai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/19 02:50:27 by ybuhai            #+#    #+#             */
-/*   Updated: 2020/01/19 05:05:03 by ybuhai           ###   ########.fr       */
+/*   Updated: 2020/01/19 14:02:10 by ybuhai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,8 @@ void	*find_memory(size_t size, t_zone *zone, int tiny, int for_history)
 
 void	*malloc(size_t size)
 {
-	void *ret;
-	long long i;
+	void		*ret;
+	long long	i;
 
 	ret = NULL;
 	if (!size)
