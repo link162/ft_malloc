@@ -6,29 +6,29 @@
 /*   By: ybuhai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/05 12:29:52 by ybuhai            #+#    #+#             */
-/*   Updated: 2020/01/19 01:53:09 by ybuhai           ###   ########.fr       */
+/*   Updated: 2020/01/19 04:35:39 by ybuhai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_MALLOC_INTER
-#define FT_MALLOC_INTER
-#include "libftprintf.h"
-#include <pthread.h>
-#include <sys/mman.h>
+#ifndef FT_MALLOC_INTERNAL_H
+# define FT_MALLOC_INTERNAL_H
+# include "libftprintf.h"
+# include <pthread.h>
+# include <sys/mman.h>
 
-#define NUM_PRE_ALLOC 100
-#define TINY_SIZE 128
-#define SMALL_SIZE 512
-#define FOR_POOL 2
-#define FOR_MEM 1
-#define HISTORY_EN 0
+# define NUM_PRE_ALLOC 100
+# define TINY_SIZE 128
+# define SMALL_SIZE 512
+# define FOR_POOL 2
+# define FOR_MEM 1
+# define HISTORY_EN 0
 
 typedef enum
 {
 	F_MALLOC,
 	F_REALLOC,
 	F_FREE
-} t_func;
+}	t_func;
 
 typedef struct		s_zone
 {
@@ -53,7 +53,7 @@ typedef struct		s_mem
 }					t_mem;
 
 extern t_mem		g_mem;
-extern pthread_mutex_t	mutex;
+extern pthread_mutex_t	g_mutex;
 
 void				*malloc(size_t size);
 void				free(void *ptr);
