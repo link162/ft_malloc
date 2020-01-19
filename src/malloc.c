@@ -3,7 +3,7 @@
 t_mem g_mem = {0};
 pthread_mutex_t mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
 
-void	*alloc_big_zone(size_t size)
+void	*alloc_big_zone(size_t size, int pool)
 {
 	int page_size;
 	t_zone *new;
@@ -16,7 +16,7 @@ void	*alloc_big_zone(size_t size)
 		return NULL;
 	new->next = g_mem.big;
 	new->size = (size / page_size + 1) * page_size - sizeof(t_zone);
-	new->used = 1;
+	new->used = pool ? 2 : 1;
 	g_mem.big = new;
 	return ((void *)((void *)new) + sizeof(t_zone));
 }
@@ -26,7 +26,7 @@ int		mem_init()
 	if (!g_mem.tiny)
 	{
 		g_mem.tiny = (t_zone *)alloc_big_zone((TINY_SIZE + sizeof(t_zone)) *
-				NUM_PRE_ALLOC + sizeof(t_zone));
+				NUM_PRE_ALLOC + sizeof(t_zone), FOR_POOL);
 		if (!g_mem.tiny)
 			return (1);
 		g_mem.tiny->size = (TINY_SIZE + sizeof(t_zone)) * NUM_PRE_ALLOC - sizeof(t_zone);
@@ -36,7 +36,7 @@ int		mem_init()
 	if(!g_mem.small)
 	{
 		g_mem.small = (t_zone *)alloc_big_zone((SMALL_SIZE + sizeof(t_zone)) *
-				NUM_PRE_ALLOC + sizeof(t_zone));
+				NUM_PRE_ALLOC + sizeof(t_zone), FOR_POOL);
 		if (!g_mem.small)
 			return (1);
 		g_mem.small->size = (SMALL_SIZE + sizeof(t_zone)) * NUM_PRE_ALLOC - sizeof(t_zone);
@@ -46,7 +46,7 @@ int		mem_init()
 	return (0);
 }
 
-void *find_memory(size_t size, t_zone *zone, int tiny)
+void *find_memory(size_t size, t_zone *zone, int tiny, int for_history)
 {
 	t_zone *last;
 	int i = 0;
@@ -55,7 +55,7 @@ void *find_memory(size_t size, t_zone *zone, int tiny)
 	{
 		if (!zone->used && zone->size >= size)
 		{
-			zone->used = 1;
+			zone->used = for_history;
 			if (zone->size - size > sizeof(t_zone))
 			{
 				last = (void *)zone + size + sizeof(t_zone);
@@ -72,17 +72,16 @@ void *find_memory(size_t size, t_zone *zone, int tiny)
 		zone = zone->next;
 		i++;
 	}
-	//ft_printf("need more small memory! %i\n", i);
 	
 	if (tiny)
-		last->next = (t_zone *)alloc_big_zone((TINY_SIZE + sizeof(t_zone)) * NUM_PRE_ALLOC + sizeof(t_zone));
+		last->next = (t_zone *)alloc_big_zone((TINY_SIZE + sizeof(t_zone)) * NUM_PRE_ALLOC + sizeof(t_zone), FOR_POOL);
 	else
-		last->next = (t_zone *)alloc_big_zone((SMALL_SIZE + sizeof(t_zone)) * NUM_PRE_ALLOC + sizeof(t_zone));
+		last->next = (t_zone *)alloc_big_zone((SMALL_SIZE + sizeof(t_zone)) * NUM_PRE_ALLOC + sizeof(t_zone), FOR_POOL);
 	if (!last->next)
 		return (NULL);
 	last = last->next;
 	last->size = size;
-	last->used = 1;
+	last->used = for_history;
 	last->next = (void *)last + size + sizeof(t_zone);
 	last->next->size = (TINY_SIZE + sizeof(t_zone)) * NUM_PRE_ALLOC - size - sizeof(t_zone) * 2;
 	last->next->used = 0;
@@ -95,10 +94,7 @@ void *malloc(size_t size)
 {
 	void *ret;
 
-	//ft_printf("malloc(%lli);\n", size);
 	ret = NULL;
-	if (size < 0)
-		ret = NULL;
 	if (!size)
 		size = TINY_SIZE;
 	pthread_mutex_lock(&mutex);
@@ -106,12 +102,12 @@ void *malloc(size_t size)
 		if (mem_init())
 			ret = NULL;
 	if (TINY_SIZE >= size)
-		ret = find_memory(size, g_mem.tiny, 1);
+		ret = find_memory(size, g_mem.tiny, 1, FOR_MEM);
 	else if(SMALL_SIZE >= size)
-		ret = find_memory(size, g_mem.small, 0);
+		ret = find_memory(size, g_mem.small, 0, FOR_MEM);
 	else
-		ret = alloc_big_zone(size + sizeof(t_zone));
-	//ft_printf("%p\n", ret);
+		ret = alloc_big_zone(size + sizeof(t_zone), FOR_MEM);
+	//write_history(F_MALLOC, size);
 	pthread_mutex_unlock(&mutex);
 	return (ret);
 }

@@ -1,4 +1,4 @@
-//#include "ft_malloc.h"
+#include "ft_malloc.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -7,18 +7,19 @@
 
 int main(int argc, char **argv)
 {
-	for(int i = 0; i < 98; i++)
-		malloc(128);
-	char *s99 = malloc(128);
-	char *s100 = malloc(128);
-	char *s1 = malloc(128);
-	char *s2 = malloc(128);
-	//free(s2);
+	
+	free(NULL);
+	free(NULL);
+	realloc(NULL, 3);
+	realloc(NULL, 3);
+	char *s1 =	malloc(128);
 	free(s1);
-	count_tiny();
+	show_alloc_mem_ex();
+	malloc_show_history();
 	/*
-	char *s2 = malloc(128);
-	free(s99);
-	free(s100);
-	*/
+	s1 = malloc(128);
+	free(s1);
+	realloc(NULL, 3);
+	realloc(NULL, 5);
+*/
 }

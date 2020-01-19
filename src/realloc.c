@@ -1,5 +1,51 @@
 #include "ft_malloc_internal.h"
 
+void	write_history(t_func func, size_t size)
+{
+	t_hist *hist;
+
+	if (HISTORY_EN)
+		return ;
+	if (!g_mem.tiny)
+		mem_init();
+	if(!g_mem.hist)
+	{
+		g_mem.hist = find_memory(sizeof(t_hist), g_mem.tiny, 1, FOR_POOL);
+		if (!g_mem.hist)
+			return ;
+		g_mem.hist->size = size;
+		g_mem.hist->func = func;
+		g_mem.hist->next = NULL;
+		return ;
+	}
+	hist = g_mem.hist;
+	while(hist->next)
+		hist = hist->next;
+	hist->next = find_memory(sizeof(t_hist), g_mem.tiny, 1, FOR_POOL);
+	if (!hist->next)
+		return ;
+	hist->next->size = size;
+	hist->next->func = func;
+	hist->next->next = NULL;
+}
+
+void	malloc_show_history(void)
+{
+	t_hist *hist;
+
+	hist = g_mem.hist;
+	while (hist)
+	{
+		if (hist->func == F_MALLOC)
+			ft_printf("malloc: %llu\n", hist->size);
+		else if (hist->func == F_FREE)
+			ft_printf("free:\n");
+		else if (hist->func == F_REALLOC)
+			ft_printf("realloc: %llu\n", hist->size);
+		hist = hist->next;
+	}
+}
+
 t_zone	**find_zone(void *ptr, t_zone **zone)
 {
 	t_zone *tmp;
@@ -18,17 +64,14 @@ t_zone	**find_zone(void *ptr, t_zone **zone)
 
 void	*realloc(void *ptr, size_t size)
 {
-	//ft_printf("realloc(%p, %lli);\n", ptr, size);
 	t_zone **zone;
 	t_zone *tmp;
 	void *ret;
 
 	pthread_mutex_lock(&mutex);
-	if (size < 0)
-	{
-		pthread_mutex_unlock(&mutex);
-		return (NULL);
-	}
+	if (!g_mem.tiny)
+		mem_init();
+	//write_history(F_REALLOC, size);
 	if (!size || !g_mem.tiny)
 	{
 		free(ptr);
