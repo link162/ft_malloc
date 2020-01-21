@@ -6,7 +6,7 @@
 /*   By: ybuhai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/05 12:29:52 by ybuhai            #+#    #+#             */
-/*   Updated: 2020/01/19 14:14:49 by ybuhai           ###   ########.fr       */
+/*   Updated: 2020/01/21 20:36:11 by ybuhai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 # include <pthread.h>
 # include <sys/mman.h>
 
-# define NUM_PRE_ALLOC 100
+# define NUM_PRE_ALLOC 1000
 # define TINY_SIZE 128
-# define SMALL_SIZE 512
+# define SMALL_SIZE 1024
 # define FOR_POOL 2
 # define FOR_MEM 1
 # define HISTORY_EN 0

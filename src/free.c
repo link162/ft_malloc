@@ -6,7 +6,7 @@
 /*   By: ybuhai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/19 03:09:31 by ybuhai            #+#    #+#             */
-/*   Updated: 2020/01/19 03:14:06 by ybuhai           ###   ########.fr       */
+/*   Updated: 2020/01/21 20:36:04 by ybuhai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void	free_ptr_in_big(t_zone **zone, void *ptr)
 
 	if ((*zone) + 1 == ptr)
 	{
+		ft_printf("done free!!!\n");
 		tmp = (*zone)->next;
 		munmap((void *)*zone, (*zone)->size + sizeof(t_zone));
 		*zone = tmp;
@@ -75,6 +76,7 @@ void	free_ptr_in_big(t_zone **zone, void *ptr)
 	{
 		if (tmp->next + 1 == ptr)
 		{
+		ft_printf("done free!!!\n");
 			tail = tmp->next->next;
 			munmap((void *)tmp->next, tmp->next->size + sizeof(t_zone));
 			tmp->next = tail;

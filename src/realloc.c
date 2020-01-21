@@ -6,7 +6,7 @@
 /*   By: ybuhai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/19 02:59:51 by ybuhai            #+#    #+#             */
-/*   Updated: 2020/01/19 13:49:25 by ybuhai           ###   ########.fr       */
+/*   Updated: 2020/01/21 21:23:53 by ybuhai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,20 +112,18 @@ void	*realloc(void *ptr, size_t size)
 		mem_init();
 	if (HISTORY_EN)
 		write_history(F_REALLOC, size);
-	if (!size || !g_mem.tiny)
+	if (!size || !g_mem.tiny || !ptr)
 	{
 		free(ptr);
 		pthread_mutex_unlock(&g_mutex);
 		return (malloc(size));
 	}
 	if (NULL == (zone = find_zone(ptr, &g_mem.tiny)))
-		zone = find_zone(ptr, &g_mem.small);
-	if (!zone)
-		zone = find_zone(ptr, &g_mem.big);
-	if (!zone || !ptr)
-	{
-		pthread_mutex_unlock(&g_mutex);
-		return (malloc(size));
-	}
+		if (NULL == (zone = find_zone(ptr, &g_mem.small)))
+			if (NULL == (zone = find_zone(ptr, &g_mem.big)))
+			{
+			pthread_mutex_unlock(&g_mutex);
+			return (malloc(size));
+			}
 	return (concatinate_mem(ptr, size, zone, *zone));
 }

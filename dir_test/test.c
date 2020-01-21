@@ -1,4 +1,3 @@
-#include "ft_malloc.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -16,8 +15,6 @@ void *foo(void *d)
 		s2 = malloc(234);
 		free(s1);
 		free(s2);
-		printf("%i %lli\n", i, pthread_self());
-		show_alloc_mem_ex(void);
 	}
 	return NULL;
 }
