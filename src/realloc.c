@@ -6,7 +6,7 @@
 /*   By: ybuhai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/19 02:59:51 by ybuhai            #+#    #+#             */
-/*   Updated: 2020/01/21 21:23:53 by ybuhai           ###   ########.fr       */
+/*   Updated: 2020/01/25 19:26:07 by ybuhai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ void	write_history(t_func func, size_t size)
 {
 	t_hist *hist;
 
-	if (HISTORY_EN)
-		return ;
 	if (!g_mem.tiny)
 		mem_init();
 	if (!g_mem.hist)
@@ -108,10 +106,11 @@ void	*realloc(void *ptr, size_t size)
 	t_zone **zone;
 
 	pthread_mutex_lock(&g_mutex);
+	if (!issetugid())
+		if (getenv("MallocStackLogging"))
+			write_history(F_REALLOC, size);
 	if (!g_mem.tiny)
 		mem_init();
-	if (HISTORY_EN)
-		write_history(F_REALLOC, size);
 	if (!size || !g_mem.tiny || !ptr)
 	{
 		free(ptr);
@@ -122,8 +121,8 @@ void	*realloc(void *ptr, size_t size)
 		if (NULL == (zone = find_zone(ptr, &g_mem.small)))
 			if (NULL == (zone = find_zone(ptr, &g_mem.big)))
 			{
-			pthread_mutex_unlock(&g_mutex);
-			return (malloc(size));
+				pthread_mutex_unlock(&g_mutex);
+				return (NULL);
 			}
 	return (concatinate_mem(ptr, size, zone, *zone));
 }

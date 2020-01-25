@@ -1,14 +1,27 @@
-#include "ft_malloc_internal.h"
-#include <stdlib.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   test5.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ybuhai <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/01/25 14:44:04 by ybuhai            #+#    #+#             */
+/*   Updated: 2020/01/25 20:01:49 by ybuhai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int main()
+#include <ft_malloc_internal.h>
+
+int	main(void)
 {
 	void *t;
+
 	t = malloc(1024);
 	t = malloc(1024 * 32);
 	t = malloc(1024 * 1024);
 	t = malloc(1024 * 1024 * 16);
 	t = malloc(1024 * 1024 * 128);
-//	show_alloc_mem();
+	show_alloc_mem();
+	malloc_show_history();
 	return (0);
 }

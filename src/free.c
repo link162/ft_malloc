@@ -6,27 +6,49 @@
 /*   By: ybuhai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/19 03:09:31 by ybuhai            #+#    #+#             */
-/*   Updated: 2020/01/21 20:36:04 by ybuhai           ###   ########.fr       */
+/*   Updated: 2020/01/25 20:14:59 by ybuhai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_malloc_internal.h"
 
-void	display_zones(t_zone *zone)
+void	*calloc(size_t count, size_t size)
 {
+	void *tmp;
+
+	tmp = malloc(count * size);
+	if (tmp)
+		ft_bzero(tmp, count * size);
+	return (tmp);
+}
+
+void	show_alloc_mem(void)
+{
+	t_zone *zone;
+
+	pthread_mutex_lock(&g_mutex);
+	zone = g_mem.tiny;
 	while (zone)
 	{
 		if (zone->used == FOR_MEM)
 			ft_printf("Zone %p size %llu\n", zone, zone->size);
 		zone = zone->next;
 	}
-}
-
-void	show_alloc_mem_ex(void)
-{
-	display_zones(g_mem.tiny);
-	display_zones(g_mem.small);
-	display_zones(g_mem.big);
+	zone = g_mem.small;
+	while (zone)
+	{
+		if (zone->used == FOR_MEM)
+			ft_printf("Zone %p size %llu\n", zone, zone->size);
+		zone = zone->next;
+	}
+	zone = g_mem.big;
+	while (zone)
+	{
+		if (zone->used == FOR_MEM)
+			ft_printf("Zone %p size %llu\n", zone, zone->size);
+		zone = zone->next;
+	}
+	pthread_mutex_unlock(&g_mutex);
 }
 
 int		find_ptr_in_list(t_zone *zone, void *ptr)
@@ -65,7 +87,6 @@ void	free_ptr_in_big(t_zone **zone, void *ptr)
 
 	if ((*zone) + 1 == ptr)
 	{
-		ft_printf("done free!!!\n");
 		tmp = (*zone)->next;
 		munmap((void *)*zone, (*zone)->size + sizeof(t_zone));
 		*zone = tmp;
@@ -76,7 +97,6 @@ void	free_ptr_in_big(t_zone **zone, void *ptr)
 	{
 		if (tmp->next + 1 == ptr)
 		{
-		ft_printf("done free!!!\n");
 			tail = tmp->next->next;
 			munmap((void *)tmp->next, tmp->next->size + sizeof(t_zone));
 			tmp->next = tail;
@@ -89,15 +109,16 @@ void	free_ptr_in_big(t_zone **zone, void *ptr)
 void	free(void *ptr)
 {
 	pthread_mutex_lock(&g_mutex);
-	if (HISTORY_EN)
-		write_history(F_FREE, 0);
+	if (!issetugid())
+		if (getenv("MallocStackLogging"))
+			write_history(F_FREE, 0);
 	if (!ptr)
+	{
+		pthread_mutex_unlock(&g_mutex);
 		return ;
-	if (find_ptr_in_list(g_mem.tiny, ptr))
-		;
-	else if (find_ptr_in_list(g_mem.small, ptr))
-		;
-	else
-		free_ptr_in_big(&g_mem.big, ptr);
+	}
+	if (!find_ptr_in_list(g_mem.tiny, ptr))
+		if (!find_ptr_in_list(g_mem.small, ptr))
+			free_ptr_in_big(&g_mem.big, ptr);
 	pthread_mutex_unlock(&g_mutex);
 }

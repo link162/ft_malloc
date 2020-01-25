@@ -4,7 +4,7 @@ endif
 NAME		= libft_malloc_$(HOSTTYPE).so
 TST			= dir_test/test.c
 COMP		= gcc
-FLAGS		= #-Wall -Wextra -Werror
+FLAGS		= #-Wall -Wextra -Werror -O3
 SRC			= malloc.c free.c realloc.c
 SRC_DIR		= src/
 OBJ_DIR		= obj/
@@ -21,18 +21,14 @@ $(LINK):
 	@ln -s $(NAME) $(LINK)
 
 test : all
-	@$(COMP) -o test dir_test/test.c -L. -lft_malloc_$(HOSTTYPE) -I $(INC_DIR)
-	@$(COMP) -o test0 dir_test/test0.c -L. -lft_malloc_$(HOSTTYPE) -I $(INC_DIR)
-	@$(COMP) -o test0_origin dir_test/test0.c
-	@$(COMP) -o test1 dir_test/test1.c -L. -lft_malloc_$(HOSTTYPE) -I $(INC_DIR)
-	@$(COMP) -o test1_origin dir_test/test1.c
-	@$(COMP) -o test2 dir_test/test2.c -L. -lft_malloc_$(HOSTTYPE) -I $(INC_DIR)
-	@$(COMP) -o test2_origin dir_test/test2.c
-	@$(COMP) -o test3 dir_test/test3.c -L. -lft_malloc_$(HOSTTYPE) -I $(INC_DIR)
-	@$(COMP) -o test3a dir_test/test3a.c -L. -lft_malloc_$(HOSTTYPE) -I $(INC_DIR)
-	@$(COMP) -o test4 dir_test/test4.c -L. -lft_malloc_$(HOSTTYPE) -I $(INC_DIR)
-	@$(COMP) -o test4_origin dir_test/test4.c
-	@$(COMP) -o test5 dir_test/test5.c -L. -lft_malloc_$(HOSTTYPE) -I $(INC_DIR) -I $(LIBFT_DIR)
+	@$(COMP) -o test dir_test/test.c 
+	@$(COMP) -o test0 dir_test/test0.c
+	@$(COMP) -o test1 dir_test/test1.c
+	@$(COMP) -o test2 dir_test/test2.c
+	@$(COMP) -o test3 dir_test/test3.c
+	@$(COMP) -o test3a dir_test/test3a.c
+	@$(COMP) -o test4 dir_test/test4.c 
+	@$(COMP) -o test5 dir_test/test5.c -L. -lft_malloc -I $(INC_DIR) -I $(LIBFT_DIR)
 	@printf "\033[1;32mtest files created \033[0m\n"
 
 $(NAME): $(LIBFT) $(OBJ)
@@ -51,7 +47,7 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@$(COMP) -c $< -fPIC -o $@ $(FLAGS) -I $(INC_DIR) -I $(LIBFT_DIR)
 
 clean:
-	@rm -rf $(OBJ)* $(EXE) *.o a.out test* $(LINK)
+	@rm -rf $(OBJ)* $(EXE) *.o test* $(LINK)
 	@make clean -C $(LIBFT_DIR)
 	@printf "\033[1;33mobject deleted \033[0m\n"
 

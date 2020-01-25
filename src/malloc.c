@@ -6,7 +6,7 @@
 /*   By: ybuhai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/19 02:50:27 by ybuhai            #+#    #+#             */
-/*   Updated: 2020/01/21 20:16:19 by ybuhai           ###   ########.fr       */
+/*   Updated: 2020/01/25 20:15:34 by ybuhai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	*alloc_big_zone(size_t size, int pool)
 		return (NULL);
 	new->next = g_mem.big;
 	new->size = (size / page_size + 1) * page_size - sizeof(t_zone);
-	new->used = pool ? 2 : 1;
+	new->used = pool;
 	g_mem.big = new;
 	return ((void *)((void *)new) + sizeof(t_zone));
 }
@@ -128,8 +128,9 @@ void	*malloc(size_t size)
 		ret = find_memory(size, g_mem.small, 0, FOR_MEM);
 	else
 		ret = alloc_big_zone(size + sizeof(t_zone), FOR_MEM);
-	if (HISTORY_EN)
-		write_history(F_MALLOC, size);
+	if (!issetugid())
+		if (getenv("MallocStackLogging"))
+			write_history(F_MALLOC, size);
 	pthread_mutex_unlock(&g_mutex);
 	return (ret);
 }

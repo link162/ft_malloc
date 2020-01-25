@@ -1,2 +1,6 @@
-#!/bin/sh
-/usr/bin/time -l ./$1 0.00
+#!/bin/bash
+
+export DYLD_LIBRARY_PATH=.
+export DYLD_INSERT_LIBRARIES=libft_malloc.so
+export DYLD_FORCE_FLAT_NAMESPACE=1
+/usr/bin/time -l ./$@ 0.00
