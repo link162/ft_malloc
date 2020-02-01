@@ -5,7 +5,7 @@ NAME		= libft_malloc_$(HOSTTYPE).so
 TST			= dir_test/test.c
 COMP		= gcc
 FLAGS		= #-Wall -Wextra -Werror -O3
-SRC			= malloc.c free.c realloc.c
+SRC			= malloc.c free.c realloc.c env.c
 SRC_DIR		= src/
 OBJ_DIR		= obj/
 OBJ			= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
@@ -29,6 +29,8 @@ test : all
 	@$(COMP) -o test3a dir_test/test3a.c
 	@$(COMP) -o test4 dir_test/test4.c 
 	@$(COMP) -o test5 dir_test/test5.c -L. -lft_malloc -I $(INC_DIR) -I $(LIBFT_DIR)
+	@$(COMP) -o test6 dir_test/test6.c -L. -lft_malloc -I $(INC_DIR) -I $(LIBFT_DIR)
+	@$(COMP) -o test7 dir_test/test7.c -L. -lft_malloc -I $(INC_DIR) -I $(LIBFT_DIR)
 	@printf "\033[1;32mtest files created \033[0m\n"
 
 $(NAME): $(LIBFT) $(OBJ)

@@ -6,7 +6,7 @@
 /*   By: ybuhai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/19 03:09:31 by ybuhai            #+#    #+#             */
-/*   Updated: 2020/01/25 20:14:59 by ybuhai           ###   ########.fr       */
+/*   Updated: 2020/01/27 20:32:15 by ybuhai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,35 +20,6 @@ void	*calloc(size_t count, size_t size)
 	if (tmp)
 		ft_bzero(tmp, count * size);
 	return (tmp);
-}
-
-void	show_alloc_mem(void)
-{
-	t_zone *zone;
-
-	pthread_mutex_lock(&g_mutex);
-	zone = g_mem.tiny;
-	while (zone)
-	{
-		if (zone->used == FOR_MEM)
-			ft_printf("Zone %p size %llu\n", zone, zone->size);
-		zone = zone->next;
-	}
-	zone = g_mem.small;
-	while (zone)
-	{
-		if (zone->used == FOR_MEM)
-			ft_printf("Zone %p size %llu\n", zone, zone->size);
-		zone = zone->next;
-	}
-	zone = g_mem.big;
-	while (zone)
-	{
-		if (zone->used == FOR_MEM)
-			ft_printf("Zone %p size %llu\n", zone, zone->size);
-		zone = zone->next;
-	}
-	pthread_mutex_unlock(&g_mutex);
 }
 
 int		find_ptr_in_list(t_zone *zone, void *ptr)
@@ -109,9 +80,8 @@ void	free_ptr_in_big(t_zone **zone, void *ptr)
 void	free(void *ptr)
 {
 	pthread_mutex_lock(&g_mutex);
-	if (!issetugid())
-		if (getenv("MallocStackLogging"))
-			write_history(F_FREE, 0);
+	if (is_global_var_set())
+		write_history(F_FREE, 0);
 	if (!ptr)
 	{
 		pthread_mutex_unlock(&g_mutex);

@@ -1,27 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test5.c                                            :+:      :+:    :+:   */
+/*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ybuhai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/01/25 14:44:04 by ybuhai            #+#    #+#             */
-/*   Updated: 2020/01/27 20:56:57 by ybuhai           ###   ########.fr       */
+/*   Created: 2020/01/25 13:57:33 by ybuhai            #+#    #+#             */
+/*   Updated: 2020/01/27 20:59:29 by ybuhai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft_malloc_internal.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <pthread.h>
 
-int	main(void)
+int		main(int argc, char **argv)
 {
-	void *t;
+	char	*str;
+	int		i;
 
-	t = malloc(1024);
-	t = malloc(1024 * 32);
-	t = malloc(1024 * 1024);
-	t = malloc(1024 * 1024 * 16);
-	t = malloc(1024 * 1024 * 128);
-	show_alloc_mem();
-	show_alloc_mem_ex();
-	return (0);
+	str = calloc(sizeof(char), 50);
+	while (i < 50)
+	{
+		printf("%i", str[i]);
+		i++;
+	}
+	printf("\n");
 }

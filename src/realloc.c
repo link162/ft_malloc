@@ -6,7 +6,7 @@
 /*   By: ybuhai <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/19 02:59:51 by ybuhai            #+#    #+#             */
-/*   Updated: 2020/01/25 19:26:07 by ybuhai           ###   ########.fr       */
+/*   Updated: 2020/01/27 20:48:19 by ybuhai           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,12 @@ void	write_history(t_func func, size_t size)
 	hist->next->next = NULL;
 }
 
-void	malloc_show_history(void)
+void	show_alloc_mem_ex(void)
 {
 	t_hist *hist;
 
 	hist = g_mem.hist;
+	ft_printf("Malloc history\n");
 	while (hist)
 	{
 		if (hist->func == F_MALLOC)
@@ -106,9 +107,8 @@ void	*realloc(void *ptr, size_t size)
 	t_zone **zone;
 
 	pthread_mutex_lock(&g_mutex);
-	if (!issetugid())
-		if (getenv("MallocStackLogging"))
-			write_history(F_REALLOC, size);
+	if (is_global_var_set())
+		write_history(F_REALLOC, size);
 	if (!g_mem.tiny)
 		mem_init();
 	if (!size || !g_mem.tiny || !ptr)
